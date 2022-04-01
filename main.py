@@ -1,13 +1,6 @@
 import os, glob, datetime, time, shutil
 
-startup_logo = """
-███╗   ███╗███████╗ ██████╗  █████╗     ██████╗  █████╗ ████████╗ ██████╗██╗  ██╗███████╗██████╗ 
-████╗ ████║██╔════╝██╔════╝ ██╔══██╗    ██╔══██╗██╔══██╗╚══██╔══╝██╔════╝██║  ██║██╔════╝██╔══██╗
-██╔████╔██║█████╗  ██║  ███╗███████║    ██████╔╝███████║   ██║   ██║     ███████║█████╗  ██████╔╝
-██║╚██╔╝██║██╔══╝  ██║   ██║██╔══██║    ██╔══██╗██╔══██║   ██║   ██║     ██╔══██║██╔══╝  ██╔══██╗
-██║ ╚═╝ ██║███████╗╚██████╔╝██║  ██║    ██████╔╝██║  ██║   ██║   ╚██████╗██║  ██║███████╗██║  ██║
-╚═╝     ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝    ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
-                                                                                      By Edgar A."""
+startup_logo = """Mega Batcher - By Edgar A."""
 
 class MenuOne:
 
@@ -175,8 +168,67 @@ class MenuOne:
                 Home.error()
 
 class MenuTwo:
-    # For Future Use
-    pass
+
+	def prunepurge():
+
+		try:
+			date_format = "%m/%d/%Y"
+			epoch = datetime.datetime(1970, 1, 1)
+			deadline = input('Enter cut-off date for older folders/files to be deleted (Ex: M/D/YEAR): ')
+
+			folders = 0
+			reg_file = 0
+			cutoff = ((datetime.datetime.strptime(deadline, date_format) - epoch).total_seconds())
+
+			directory = os.getcwd()
+
+			files = os.listdir(directory)
+			file_epoch_time = os.path.getmtime(directory)
+
+			for file in files:
+
+				current_file_path = (directory + "\\" + str(file))
+				if file_epoch_time <= cutoff:
+
+					#if os.path.isfile(current_file_path):
+
+						#os.remove(current_file_path)
+						#reg_file += 1
+
+					if os.path.isdir(current_file_path):
+					
+						if file != "main.py" or file != "start.bat":
+
+							shutil.rmtree(current_file_path)
+							folders += 1
+						else:
+							pass
+					else:
+						print('File not found:', current_file_path)
+				else:
+					pass
+
+			print(f'\n{folders} folders purged.')
+			print(f'{reg_file} files purged.')
+
+		except:
+			Home.error()
+
+	def menu1():
+
+        current_paths = None
+        paths = []
+
+        while True:
+            try:
+                print('\n------------------')
+                print('[ Deleting all files within this directory... ]')
+
+                MenuTwo.prunepurge()
+
+				print('\n------------------')
+            except:
+                Home.error()
 
 class Home:
 
@@ -186,10 +238,10 @@ class Home:
     def main_menu():
 
         print('\n------------------')
-        print('[ Main Menu ]')
+        print('[ Main Menu - Make sure the filename is "main.py" ]')
         print('------------------')
         print('[ 1 ] Purge files')
-        print('[ 2 ] Coming Soon')
+        print('[ 2 ] Neato Mode (Deletes all folders inside the current directory)')
         print('[ 3 ] Exit')
         print('------------------\n')
 
@@ -198,7 +250,7 @@ class Home:
         if option == 1:
             MenuOne.menu1()
         elif option == 2:
-            pass
+            MenuTwo.menu1()
         elif option == 3:
             return False
         else:
