@@ -11,10 +11,9 @@ startup_logo = """
 
 class MenuOne:
 
-    def prunepurge(filepath):
+    def prunepurge(directories):
 
         try:
-            file_epoch_time = os.path.getmtime(filepath)
             date_format = "%m/%d/%Y"
             epoch = datetime.datetime(1970, 1, 1)
 
@@ -22,32 +21,39 @@ class MenuOne:
             print(f'\nFolders/Files older than {deadline} will be purged. Are you sure you want to continue?')
             print('[ 1 ] Yes')
             print('[ 2 ] No')
-
             option = int(input())
+
+            folders = 0
+            reg_file = 0
+            cutoff = ((datetime.datetime.strptime(deadline, date_format) - epoch).total_seconds())
+
             if option == 1:
+                for directory in directories:
 
-                cutoff = ((datetime.datetime.strptime(deadline, date_format) - epoch).total_seconds())
-                i = 0
-                files = os.listdir(filepath)
+                    files = os.listdir(directory)
+                    file_epoch_time = os.path.getmtime(directory)
 
-                for each in files:
-                    if file_epoch_time <= cutoff:
+                    for file in files:
 
-                        current_file_path = (filepath + "\\" + str(each))
+                        current_file_path = (directory + "\\" + str(file))
+                        if file_epoch_time <= cutoff:
 
-                        if os.path.isdir(current_file_path) == True:
-                            shutil.rmtree(current_file_path)
-                            i += 1
+                            if os.path.isfile(current_file_path):
 
-                        elif os.path.isfile(current_file_path) == True:
-                            os.remove(current_file_path)
-                            i += 1
+                                os.remove(current_file_path)
+                                reg_file += 1
+
+                            elif os.path.isdir(current_file_path):
+
+                                shutil.rmtree(current_file_path)
+                                folders += 1
+                            else:
+                                print('File not found:', current_file_path)
                         else:
                             pass
-                    else:
-                        pass
 
-                print(f'\n{i} folders/files purged.\n')
+                print(f'\n{folders} folders purged.')
+                print(f'{reg_file} files purged.')
 
             if option == 2:
                 print('\nOperation Canceled.')
@@ -55,55 +61,94 @@ class MenuOne:
         except:
             Home.error()
 
-    def nukedir(dirpath, warning=True):
+    def nukedir(directories, warning=True):
 
         try:
-            if warning == True or warning == False:
-                print('\nAre you sure you want to delete the specificed path items?:', dirpath)
-                print('[ 1 ] Yes')
-                print('[ 2 ] No')
-                answer = int(input())
+            print('\nAre you sure you want to delete the specificed path items?:')
+            print('[ 1 ] Yes')
+            print('[ 2 ] No')
+            answer = int(input())
 
-                if answer == 1:
+            for directory in directories:
+                if warning == True:
 
-                    print(dirpath)
-                    shutil.rmtree(dirpath)
+                    if answer == 1:
+                        pass
 
-                    print('\nThanos snapped:', dirpath)
+                    elif answer == 2:
+                        print('\nOperation Canceled.')
+                        return False
+                    else:
+                        print('\nInvalid input given.')
+                        return False
 
-                elif answer == 2:
-                    print('\nOperation Canceled.')
-                    return False
-                else:
-                    print('\nInvalid input given.')
+                shutil.rmtree(directory)
+                print('\nThanos snapped:', directory)
         except:
             Home.error()
 
-    def typedelete(filepath):
+    def typedelete(directories):
 
         try:
+            i = 0
             file_ext = input('\nEnter the file extension (Ex: txt):')
 
-            i = 0
-            full_path = str(filepath + '\*.' + file_ext)
-            files = glob.glob(full_path)
-            for each in files:
-                os.remove(each)
-                i += 1
+            for directory in directories:
+
+                full_path = str(directory + '\*.' + file_ext)
+                files = glob.glob(full_path)
+                
+                for file in files:
+                    os.remove(file)
+                    i += 1
 
             print(f'\n{i} files with .{file_ext} removed.\n')
         except:
             Home.error()
 
+    def getPath(paths):
+        
+        try:
+            i = 0
+            while True:
+                print('\nEnter directory path(s) you would like to work inside:\n(One path per line, Enter 0 on new line after done entering): ')
+                current_path = input('\n')
+
+                if current_path != '0':
+                    paths.append(current_path)
+                    i += 1
+
+                elif current_path == '0':
+
+                    if i == 0:
+                        Home.error()
+
+                    elif i >= 1:
+                        return paths
+
+                elif current_path == None:
+                    Home.error()
+        except:
+            Home.error()
+
     def menu1():
 
-        current_path = None
+        current_paths = None
+        paths = []
+
         while True:
             try:
                 print('\n------------------')
                 print('[ Purge Files ]')
                 
-                print('Current Path:', current_path)
+                print('________________')
+                print('Current Path(s): ')
+                if current_paths != None:
+                    for each_path in current_paths:
+                        print(each_path)
+                else:
+                    print(current_paths)
+                print('________________')
 
                 print('\n[ 1 ] Delete files older than date specified (All folders/files that meet age condition)')
                 print('[ 2 ] Delete specific file types (All files with specified extension)')
@@ -115,13 +160,13 @@ class MenuOne:
                 option = int(input())
 
                 if option == 1:
-                    MenuOne.prunepurge(current_path)
+                    MenuOne.prunepurge(current_paths)
                 elif option == 2:
-                    MenuOne.typedelete(current_path)
+                    MenuOne.typedelete(current_paths)
                 elif option == 3:
-                    current_path = input('\nEnter the directory path you want to work inside: ')
+                    current_paths = MenuOne.getPath(paths)
                 elif option == 9:
-                    MenuOne.nukedir(current_path, warning=True)
+                    MenuOne.nukedir(current_paths, warning=True)
                 elif option == 0:
                     break
                 else:
@@ -130,6 +175,7 @@ class MenuOne:
                 Home.error()
 
 class MenuTwo:
+    # For Future Use
     pass
 
 class Home:
