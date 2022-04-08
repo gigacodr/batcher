@@ -1,6 +1,8 @@
 # Batch Deleter
 
--Run with >= Python 3.1.0
+-Run with >= Python 3.10
+
+-Beware of system perms
 
 -Run purge.bat inside the directory you want to make changes to, no other files necessary
 
