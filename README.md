@@ -1,5 +1,8 @@
 # Batch Deleter
 
+Terms of use:
+[GIVE CREDIT IF YOU USE THIS SCRIPT]
+
 -Run with >= Python 3.10
 
 -Beware of system perms
