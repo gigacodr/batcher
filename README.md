@@ -1,7 +1,7 @@
 # Batch Deleter
 
 Terms of use:
-[GIVE CREDIT IF YOU USE THIS SCRIPT]
+[GIVE CREDIT IF YOU USE THIS SCRIPT] @wazoooo
 
 -Run with >= Python 3.10
 
