@@ -9,7 +9,7 @@ class Menu:
 	user_set_date = "4-5-2022"
 	## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
-	startup_logo = "PyBatch - By Edgar A."
+	startup_logo = "PyBatch - By Wazoooo"
 
 	def error():
 		print('\n--[ Comment out the try and except keywords to debug properly. ]--\n')
